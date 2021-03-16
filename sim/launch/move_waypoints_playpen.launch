@@ -1,0 +1,70 @@
+<!--
+Navigation launch
+-->
+
+<launch>
+  <!-- map server -->
+  <arg name="map_file" default="$(find sim)/map/playpen_map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+ 
+  <!-- 
+    Localization Node amcl
+    Reference: http://wiki.ros.org/amcl
+  -->
+  <node pkg="amcl" type="amcl" name="amcl" output="screen" args="/scan:=/scan">
+
+    <param name="min_particles" value="500"/>
+    <param name="max_particles" value="5000"/>
+    <param name="kld_err" value="0.05"/>
+    <param name="kld_z" value="0.99"/>
+    <param name="update_min_d" value="0.2"/>
+    <param name="update_min_a" value="0.5"/>
+    <param name="resample_interval" value="1"/>
+    <param name="transform_tolerance" value="0.1"/>
+    <param name="recovery_alpha_slow" value="0.001"/>
+    <param name="recovery_alpha_fast" value="0.01"/>
+　　<param name="gui_publish_rate" value="10.0"/>
+    <param name="use_map_topic" value="true" />
+    <param name="laser_max_beams" value="60"/>
+    <param name="laser_z_hit" value="0.5"/>
+    <param name="laser_z_short" value="0.05"/>
+    <param name="laser_z_max" value="0.05"/>
+    <param name="laser_z_rand" value="0.5"/>
+    <param name="laser_sigma_hit" value="0.2"/>
+    <param name="laser_lambda_short" value="0.1"/>
+    <param name="laser_likelihood_max_dist" value="2"/>
+    <param name="laser_model_type" value="likelihood_field"/>
+    <param name="odom_model_type" value="diff"/>
+    <param name="odom_alpha1" value="0.2"/>		
+    <param name="odom_alpha2" value="0.2"/>
+    <param name="odom_alpha3" value="0.8"/>
+    <param name="odom_alpha4" value="0.2"/>
+    <param name="map_frame" value="map" />
+    <param name="odom_frame" value="odom" />
+    <param name="base_frame" value="base_link"/>
+
+  </node>
+ 
+  <!--- move_base : Path Planning , Genarate cmd_vel -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find sim)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find sim)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find sim)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find sim)/config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find sim)/config/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find sim)/config/move_base_params.yaml" command="load" />
+      <remap from="cmd_vel" to="/vrefro/diff_drive_controller/cmd_vel" />
+  </node>
+
+  <!-- Set Watpoints -->
+  <!-- node pkg="sim" type="set_waypoints.py" name="set_waypoints" output="screen"/ -->
+  <!-- Move Watpoints -->
+  <node pkg="sim" type="move_waypoints.py" name="move_waypoints" output="screen"/>
+  <!-- Move Watpoints follow csv-->
+  <node pkg="sim" type="view_waypoints.py" name="view_waypoints" output="screen"/>
+
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" args="-d '$(find sim)/config/rviz/navigation.rviz'" name="visualizer" respawn="true" />
+
+</launch>
+

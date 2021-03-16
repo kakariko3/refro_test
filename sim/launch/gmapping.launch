@@ -1,0 +1,39 @@
+<!--
+SLAM（gmapping）サンプルのlaunch
+
+実行にはLRFが必要です。
+地図を生成していくためにはメガローバーを手動で移動させる必要があります。
+ゲームパッド操作サンプルまたはマウス（タッチパッド）操作サンプルを使用してください。
+
+起動コマンド： roslaunch megarover_samples gmapping.launch
+-->
+
+<launch>
+  <!-- Refro機体:base_linkからLRF:lrf_linkまでの座標変換 -->
+  <node pkg="tf" type="static_transform_publisher" name="stp_laser" args="0.6 0 0 0 0 0 base_link lrf_link 100" />
+
+  <!-- gmapping -->
+  <node pkg="gmapping" type="slam_gmapping" name="mapper">
+
+    <param name="map_frame" value="map" />
+    <param name="odom_frame" value="odom" />
+    <param name="base_frame" value="base_link"/>
+
+    <param name="map_update_interval" value="1.0" />
+    <param name="temporalUpdate" value="-1.0" />
+
+    <param name="maxUrange" value="10.0" type="double" />
+    <param name="maxRrange" value="30.0" type="double" />
+
+    <param name="xmax" value="10" type="double" />
+    <param name="ymax" value="10" type="double" />
+    <param name="xmin" value="-10" type="double" />
+    <param name="ymin" value="-10" type="double" />
+
+    <param name="particles" value="30" />
+  </node>
+
+  <!-- rviz(視覚化ツール) -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find move)/gmapping.rviz"/>
+
+</launch>

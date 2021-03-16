@@ -1,0 +1,7 @@
+<launch>
+
+  <node pkg="joy" name="joy_node" type="joy_node" args="_dev:=/dev/input/js0" output="screen"/> 
+  <node pkg="move" type="joy2vel.py" name="joy2vel" output="screen"/>
+
+</launch>
+

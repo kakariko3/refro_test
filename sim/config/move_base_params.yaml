@@ -1,0 +1,17 @@
+# move base params for MEGAROVER
+
+# プランナーの設定
+base_global_planner: "navfn/NavfnROS"
+base_local_planner: "dwa_local_planner/DWAPlannerROS"
+
+# 指令値の出力周波数（制御周期）
+controller_frequency: 10.0
+
+shutdown_costmaps: false
+
+planner_patience: 5.0 #default 5.0
+recovery_behavior_enabled: true #default true
+clearing_rotation_allowed: true #default true
+
+planner_frequency: 1.0
+

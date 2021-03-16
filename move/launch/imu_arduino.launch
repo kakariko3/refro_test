@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="move" type="imu_arduino.py" name="imu_arduino" output="screen"/>
+</launch>
+
+

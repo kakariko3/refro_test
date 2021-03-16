@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<robot name="caster1" xmlns:xacro="http://ros.org/wiki/xacro" >
+
+  <property name="PI" value="3.1415926535897931"/>
+  <property name="caster_radius" value="0.048"/>
+  <property name="caster_height" value="0.05"/>
+  <property name="caster_mass" value="0.5"/>
+
+  <!--xacro:macro name="caster_v0" params="parent *joint_origin"-->
+
+    <link name="caster1_link">
+      <visual>
+        <geometry>
+          <cylinder length="${caster_height}" radius="${caster_radius}" />
+        </geometry>
+      </visual>
+      <collision>
+　　    <geometry>
+　　　    <cylinder radius="${caster_radius}" length="${caster_height}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="${caster_mass}" />
+        <inertia ixx="${caster_mass*(3*caster_radius*caster_radius+caster_height*caster_height)/12}" 
+          ixy="0"  ixz="0"
+          iyx="0"  iyy="${caster_mass*(3*caster_radius*caster_radius+caster_height*caster_height)/12}" 
+          iyz="0"
+          izx="0"  izy="0"  izz="${caster_mass*(caster_radius*caster_radius)/2}" />
+      </inertial>
+    </link>
+
+    <joint name="caster1_joint" type="fixed">
+      <parent link="body" />
+      <child link="caster1_link" />
+      <origin xyz="0.4 0 -0.2" rpy="${PI/2} 0 0" />
+    </joint>
+
+  <!--/xacro:macro-->
+
+  <!--xacro:macro name="caster_gazebo_v0"-->
+    <gazebo reference="rear">
+      <selfCollide>false</selfCollide>
+      <mu1 value="1.0" />
+      <mu2 value="1.0" />
+    </gazebo>
+  <!--/xacro:macro-->
+
+</robot>

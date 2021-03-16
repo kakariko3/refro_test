@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<robot name="wheel" xmlns:xacro="http://ros.org/wiki/xacro" >
+
+  <!--xacro:include filename="$(find sim)/urdf/common.xacro"/-->
+  <xacro:include filename="$(find sim)/urdf/wheel.transmission.xacro"/>
+
+  <property name="PI" value="3.1415926535897931"/>
+  <property name="wheel_radius" value="0.075"/>
+  <property name="wheel_height" value="0.05"/>
+  <property name="wheel_mass" value="1.0"/>
+
+  <xacro:macro name="wheel_v0" params="prefix parent *joint_origin *joint_axis">
+
+    <link name="${prefix}_wheel_link">
+      <visual>
+        <geometry>
+          <cylinder length="${wheel_height}" radius="${wheel_radius}" />
+        </geometry>
+        <material name = "black">
+          <color rgba="0.9 0.9 0.9 2.0" />
+        </material>
+      </visual>
+      <collision>
+　　    <geometry>
+　　　    <cylinder radius="${wheel_radius}" length="${wheel_height}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="${wheel_mass}" />
+        <inertia ixx="${wheel_mass*(3*wheel_radius*wheel_radius+wheel_height*wheel_height)/12}" 
+          ixy="0"  ixz="0"
+          iyx="0"  iyy="${wheel_mass*(3*wheel_radius*wheel_radius+wheel_height*wheel_height)/12}" 
+          iyz="0"
+          izx="0"  izy="0"  izz="${wheel_mass*(wheel_radius*wheel_radius)/2}" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <insert_block name="joint_origin"/>
+      <parent link="${parent}"/>
+      <child link="${prefix}_wheel_link"/>
+      <insert_block name="joint_axis"/>
+    </joint>
+
+  </xacro:macro>
+
+  <xacro:macro name="wheel_gazebo_v0" params="prefix">
+    <gazebo reference="${prefix}_wheel_link">
+      <material>Gazebo/Red</material>
+      <selfCollide>false</selfCollide>
+      <mu1 value="1.0" />
+      <mu2 value="1.0" />
+    </gazebo>
+  </xacro:macro>
+
+</robot>

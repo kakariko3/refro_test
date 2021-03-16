@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<robot name="body" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <property name="b_m" value="10.0"/>
+  <property name="b_m2" value="${b_m/12}"/>
+  <property name="b_w" value="1.0"/>
+  <property name="b_h" value="0.50"/>
+  <property name="b_d" value="0.10"/>
+
+  <!--xacro:macro name="base_v0" params="parent *joint_origin"-->
+
+    <link name="body">
+      <visual>
+　　    <geometry>
+　　　    <box size="${b_w} ${b_h} ${b_d}" />
+        </geometry>
+        <material name = "gray">
+          <color rgba="0.2 0.2 0.2 1.0" />
+        </material>
+      </visual>
+      <collision>
+　　    <geometry>
+　　　    <box size="${b_w} ${b_h} ${b_d}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="${b_m}" />
+        <inertia ixx="${b_m2*(b_h*b_h+b_d*b_d)}" ixy="0" ixz="0"
+               iyx="0" iyy="${b_m2*(b_w*b_w+b_d*b_d)}"  iyz="0"
+               izx="0" izy="0" izz="${b_m2*(b_w*b_w+b_h*b_h)}" />
+      </inertial>
+    </link>
+
+    <joint name="body_joint" type="fixed">
+      <parent link="base_link" />
+      <child link="body" />
+      <origin xyz="0.0 0 0.25" rpy="0 0 0" />
+    </joint>
+
+  <!--/xacro:macro-->
+
+  <!--xacro:macro name="base_gazebo_v0"-->
+    <gazebo reference="body">
+      <material>Gazebo/Gray</material>
+      <selfCollide>false</selfCollide>
+      <mu1 value="0.0" />
+      <mu2 value="0.0" />
+    </gazebo>
+  <!--/xacro:macro-->
+
+</robot>
+

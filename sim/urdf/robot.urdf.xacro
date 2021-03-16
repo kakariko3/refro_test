@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<robot name="RefroArrow" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find sim)/urdf/body.urdf.xacro" />
+  <xacro:include filename="$(find sim)/urdf/caster1.urdf.xacro" />
+  <xacro:include filename="$(find sim)/urdf/caster2.urdf.xacro" />
+  <xacro:include filename="$(find sim)/urdf/wheel.urdf.xacro" />
+  <xacro:include filename="$(find sim)/urdf/lrf.urdf.xacro"/>
+
+  <!-- =============== Link & Joint =============== -->
+
+  <link name="base_link"/>
+
+  <xacro:wheel_v0 prefix="left" parent="body">
+    <origin xyz="0.0 0.204 -0.175" rpy="${PI/2} 0 0" /> 
+    <axis xyz="0 0 -1"/>
+  </xacro:wheel_v0>
+
+  <xacro:wheel_v0 prefix="right" parent="body">
+    <origin xyz="0.0 -0.204 -0.175" rpy="${PI/2} 0 0" />
+    <axis xyz="0 0 -1"/>
+  </xacro:wheel_v0>
+
+  <xacro:lrf_v0 prefix="front" parent="body">
+    <origin xyz="0.541 0 0.1" rpy="${PI} 0 0" />
+  </xacro:lrf_v0>
+
+  <link name="lrf_link"/>
+  <joint name="lrf_link_joint" type="fixed">
+    <parent link="body"/>
+    <child link="lrf_link"/>
+    <origin xyz="0.541 0 0.1"/>
+  </joint>
+
+  <!-- ===============  Transmission =============== -->
+  <xacro:wheel_trans_v0 prefix="left"/>
+  <xacro:wheel_trans_v0 prefix="right"/>
+
+  <!-- =============== Gazebo =============== -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/vrefro</robotNamespace>
+    </plugin>
+  </gazebo>
+
+  <xacro:wheel_gazebo_v0 prefix="left"/>
+  <xacro:wheel_gazebo_v0 prefix="right"/>
+  <xacro:lrf_gazebo_v0 prefix="front" min_rad="-1.57" max_rad="1.57" min_range="0.2" max_range="20.0"/>
+  <!--xacro:lrf_gazebo_v0 prefix="front" min_rad="-2.356" max_rad="2.356" min_range="0.2" max_range="20.0"/-->
+</robot>
